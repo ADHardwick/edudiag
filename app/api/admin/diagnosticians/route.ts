@@ -34,22 +34,28 @@ export async function POST(request: NextRequest) {
   const body = await request.json()
   const { specialties, emailRecipients, ...fields } = body
 
+  const POST_FIELDS = ['name', 'photo_url', 'bio', 'city', 'state', 'zip',
+    'service_area', 'phone', 'email', 'website', 'is_published']
+  const filteredFields: Record<string, unknown> = Object.fromEntries(
+    Object.entries(fields).filter(([k]) => POST_FIELDS.includes(k))
+  )
+
   // Validate required fields
-  if (!fields.name) {
+  if (!filteredFields.name) {
     return NextResponse.json({ error: 'Name is required' }, { status: 400 })
   }
 
   // Generate unique slug
   const { data: existing } = await supabase.from('diagnosticians').select('slug')
   const takenSlugs = (existing ?? []).map((d: { slug: string }) => d.slug)
-  const slug = generateSlug(fields.name, takenSlugs)
+  const slug = generateSlug(filteredFields.name as string, takenSlugs)
 
   // Geocode on create (unconditional)
   let lat: number | null = null
   let lng: number | null = null
   let geocodeWarning = false
-  if (fields.city || fields.state || fields.zip) {
-    const coords = await geocode(fields.city ?? '', fields.state ?? '', fields.zip ?? '')
+  if (filteredFields.city || filteredFields.state || filteredFields.zip) {
+    const coords = await geocode(filteredFields.city as string ?? '', filteredFields.state as string ?? '', filteredFields.zip as string ?? '')
     if (coords) { lat = coords.lat; lng = coords.lng }
     else { geocodeWarning = true }
   }
@@ -57,24 +63,29 @@ export async function POST(request: NextRequest) {
   // Insert diagnostician
   const { data: diag, error } = await supabase
     .from('diagnosticians')
-    .insert({ ...fields, slug, lat, lng })
+    .insert({ ...filteredFields, slug, lat, lng })
     .select()
     .single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    const status = error.code === '23505' ? 409 : 500
+    return NextResponse.json({ error: error.message }, { status })
+  }
 
   // Insert specialties
   if (specialties?.length) {
-    await supabase.from('diagnostician_specialties').insert(
+    const { error: specialtyError } = await supabase.from('diagnostician_specialties').insert(
       specialties.map((id: string) => ({ diagnostician_id: diag.id, specialty_id: id }))
     )
+    if (specialtyError) return NextResponse.json({ error: specialtyError.message }, { status: 500 })
   }
 
   // Insert email recipients
   if (emailRecipients?.length) {
-    await supabase.from('listing_email_recipients').insert(
+    const { error: recipientError } = await supabase.from('listing_email_recipients').insert(
       emailRecipients.map((email: string) => ({ diagnostician_id: diag.id, email }))
     )
+    if (recipientError) return NextResponse.json({ error: recipientError.message }, { status: 500 })
   }
 
   return NextResponse.json({ data: diag, geocodeWarning }, { status: 201 })

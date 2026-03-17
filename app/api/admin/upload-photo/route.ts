@@ -9,9 +9,23 @@ export async function POST(request: NextRequest) {
 
   if (!file) return NextResponse.json({ error: 'No file provided' }, { status: 400 })
 
+  const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    return NextResponse.json({ error: 'File must be JPEG, PNG, or WebP' }, { status: 400 })
+  }
+  const MAX_SIZE = 5 * 1024 * 1024 // 5 MB
+  if (file.size > MAX_SIZE) {
+    return NextResponse.json({ error: 'File size must not exceed 5 MB' }, { status: 400 })
+  }
+
   // Delete old file if replacing
   if (oldUrl) {
-    const oldPath = oldUrl.split('/diagnostician-photos/')[1]
+    let oldPath: string | undefined
+    try {
+      oldPath = new URL(oldUrl).pathname.split('/diagnostician-photos/')[1]
+    } catch {
+      oldPath = undefined
+    }
     if (oldPath) {
       await supabase.storage.from('diagnostician-photos').remove([oldPath])
     }

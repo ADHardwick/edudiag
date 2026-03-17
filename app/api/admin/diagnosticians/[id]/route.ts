@@ -30,29 +30,37 @@ export async function PATCH(request: NextRequest, { params }: Params) {
   const body = await request.json()
   const { specialties, emailRecipients, ...fields } = body
 
+  const UPDATABLE_FIELDS = ['name', 'photo_url', 'bio', 'city', 'state', 'zip',
+    'service_area', 'phone', 'email', 'website', 'is_published']
+  const filteredFields: Record<string, unknown> = Object.fromEntries(
+    Object.entries(fields).filter(([k]) => UPDATABLE_FIELDS.includes(k))
+  )
+
   // Fetch current record to determine if geocoding is needed
-  const { data: current } = await supabase
+  const { data: current, error: fetchError } = await supabase
     .from('diagnosticians')
     .select('city, state, zip')
     .eq('id', id)
     .single()
 
+  if (fetchError || !current) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+
   let geocodeWarning = false
   // Only geocode if the request actually includes location fields AND they differ from current values
   const locationChanged =
-    ('city' in fields || 'state' in fields || 'zip' in fields) &&
-    (fields.city !== current?.city || fields.state !== current?.state || fields.zip !== current?.zip)
+    ('city' in filteredFields || 'state' in filteredFields || 'zip' in filteredFields) &&
+    (filteredFields.city !== current?.city || filteredFields.state !== current?.state || filteredFields.zip !== current?.zip)
 
-  if (locationChanged && (fields.city || fields.state || fields.zip)) {
-    const coords = await geocode(fields.city ?? '', fields.state ?? '', fields.zip ?? '')
-    if (coords) { fields.lat = coords.lat; fields.lng = coords.lng }
-    else { fields.lat = null; fields.lng = null; geocodeWarning = true }
+  if (locationChanged && (filteredFields.city || filteredFields.state || filteredFields.zip)) {
+    const coords = await geocode(filteredFields.city as string ?? '', filteredFields.state as string ?? '', filteredFields.zip as string ?? '')
+    if (coords) { filteredFields.lat = coords.lat; filteredFields.lng = coords.lng }
+    else { filteredFields.lat = null; filteredFields.lng = null; geocodeWarning = true }
   }
 
   // Update diagnostician
   const { data: diag, error } = await supabase
     .from('diagnosticians')
-    .update(fields)
+    .update(filteredFields)
     .eq('id', id)
     .select()
     .single()
@@ -63,9 +71,10 @@ export async function PATCH(request: NextRequest, { params }: Params) {
   if (specialties !== undefined) {
     await supabase.from('diagnostician_specialties').delete().eq('diagnostician_id', id)
     if (specialties.length) {
-      await supabase.from('diagnostician_specialties').insert(
+      const { error: specialtyError } = await supabase.from('diagnostician_specialties').insert(
         specialties.map((specialtyId: string) => ({ diagnostician_id: id, specialty_id: specialtyId }))
       )
+      if (specialtyError) return NextResponse.json({ error: specialtyError.message }, { status: 500 })
     }
   }
 
@@ -73,9 +82,10 @@ export async function PATCH(request: NextRequest, { params }: Params) {
   if (emailRecipients !== undefined) {
     await supabase.from('listing_email_recipients').delete().eq('diagnostician_id', id)
     if (emailRecipients.length) {
-      await supabase.from('listing_email_recipients').insert(
+      const { error: recipientError } = await supabase.from('listing_email_recipients').insert(
         emailRecipients.map((email: string) => ({ diagnostician_id: id, email }))
       )
+      if (recipientError) return NextResponse.json({ error: recipientError.message }, { status: 500 })
     }
   }
 
@@ -103,7 +113,12 @@ export async function DELETE(_: NextRequest, { params }: Params) {
 
   // Best-effort photo cleanup from Storage
   if (diag?.photo_url) {
-    const path = diag.photo_url.split('/diagnostician-photos/')[1]
+    let path: string | undefined
+    try {
+      path = new URL(diag.photo_url).pathname.split('/diagnostician-photos/')[1]
+    } catch {
+      path = undefined
+    }
     if (path) {
       await supabase.storage.from('diagnostician-photos').remove([path])
     }
