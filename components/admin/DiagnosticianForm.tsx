@@ -34,7 +34,7 @@ export function DiagnosticianForm({ diagnostician, specialtiesOptions }: Props) 
     emailRecipients: diagnostician?.email_recipients ?? [],
   })
 
-  function set(field: string, value: unknown) {
+  function set(field: keyof typeof form, value: unknown) {
     setForm((f) => ({ ...f, [field]: value }))
   }
 
@@ -59,7 +59,13 @@ export function DiagnosticianForm({ diagnostician, specialtiesOptions }: Props) 
     let photo_url = form.photo_url
     if (fileRef.current?.files?.[0]) {
       const url = await uploadPhoto()
-      if (url) photo_url = url
+      if (url) {
+        photo_url = url
+      } else {
+        setError('Photo upload failed. Please try again.')
+        setLoading(false)
+        return
+      }
     }
 
     const payload = { ...form, photo_url, specialties: form.specialties, emailRecipients: form.emailRecipients }

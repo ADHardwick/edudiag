@@ -9,25 +9,34 @@ interface Props {
 
 export function DiagnosticianTable({ diagnosticians: initial }: Props) {
   const [items, setItems] = useState(initial)
+  const [error, setError] = useState<string | null>(null)
 
   async function handleDelete(id: string, name: string) {
     if (!confirm(`Delete "${name}"? This cannot be undone.`)) return
-    await fetch(`/api/admin/diagnosticians/${id}`, { method: 'DELETE' })
+    const res = await fetch(`/api/admin/diagnosticians/${id}`, { method: 'DELETE' })
+    if (!res.ok) { setError('Failed to delete listing. Please try again.'); return }
     setItems((prev) => prev.filter((d) => d.id !== id))
   }
 
   async function togglePublished(id: string, current: boolean) {
-    await fetch(`/api/admin/diagnosticians/${id}`, {
+    const res = await fetch(`/api/admin/diagnosticians/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ is_published: !current }),
     })
+    if (!res.ok) { setError('Failed to update listing. Please try again.'); return }
     setItems((prev) => prev.map((d) => d.id === id ? { ...d, is_published: !current } : d))
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-border">
-      <table className="w-full text-sm">
+    <div>
+      {error && (
+        <div className="mb-4 bg-red-50 border border-red-200 text-red-700 rounded px-4 py-3 text-sm">
+          {error}
+        </div>
+      )}
+      <div className="overflow-x-auto rounded-xl border border-border">
+        <table className="w-full text-sm">
         <thead className="bg-surface text-text-secondary">
           <tr>
             <th className="text-left px-4 py-3 font-medium">Name</th>
@@ -74,7 +83,8 @@ export function DiagnosticianTable({ diagnosticians: initial }: Props) {
             <tr><td colSpan={5} className="px-4 py-8 text-center text-text-secondary">No diagnosticians yet.</td></tr>
           )}
         </tbody>
-      </table>
+        </table>
+      </div>
     </div>
   )
 }
