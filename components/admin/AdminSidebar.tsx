@@ -31,7 +31,9 @@ export function AdminSidebar() {
             key={href}
             href={href}
             className={`block px-3 py-2 rounded-md text-sm transition-colors ${
-              pathname === href ? 'bg-white/20 font-medium' : 'hover:bg-white/10'
+              (href === '/admin' ? pathname === href : pathname === href || pathname.startsWith(href + '/'))
+                ? 'bg-white/20 font-medium'
+                : 'hover:bg-white/10'
             }`}
           >
             {label}
