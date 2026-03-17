@@ -13,7 +13,7 @@ const config: Config = {
         border: '#e5e7eb',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
       },
     },
   },
