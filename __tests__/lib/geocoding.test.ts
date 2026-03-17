@@ -7,7 +7,10 @@ vi.stubGlobal('fetch', mockFetch)
 import { geocode } from '@/lib/geocoding'
 
 describe('geocode', () => {
-  beforeEach(() => { mockFetch.mockReset() })
+  beforeEach(() => {
+    mockFetch.mockReset()
+    process.env.GOOGLE_GEOCODING_API_KEY = 'test-api-key'
+  })
 
   it('returns lat/lng on success', async () => {
     mockFetch.mockResolvedValueOnce({

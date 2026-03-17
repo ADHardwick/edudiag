@@ -3,8 +3,10 @@ export async function geocode(
   state: string,
   zip: string
 ): Promise<{ lat: number; lng: number } | null> {
+  const key = process.env.GOOGLE_GEOCODING_API_KEY
+  if (!key) return null
+
   const address = encodeURIComponent(`${city}, ${state} ${zip}`)
-  const key = process.env.GOOGLE_GEOCODING_API_KEY!
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${key}`
 
   try {

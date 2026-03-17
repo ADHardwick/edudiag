@@ -7,18 +7,9 @@ vi.mock('resend', () => ({
   })),
 }))
 
-// Mock @react-email/components (render is re-exported from there)
-vi.mock('@react-email/components', () => ({
+// Mock @react-email/render
+vi.mock('@react-email/render', () => ({
   render: vi.fn().mockResolvedValue('<html>mock email</html>'),
-  Html: () => null,
-  Head: () => null,
-  Body: () => null,
-  Container: () => null,
-  Heading: () => null,
-  Text: () => null,
-  Hr: () => null,
-  Link: () => null,
-  Section: () => null,
 }))
 
 import { sendLeadEmails } from '@/lib/email'

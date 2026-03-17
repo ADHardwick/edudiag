@@ -14,7 +14,10 @@ export function createClient() {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
             )
-          } catch {}
+          } catch {
+            // Intentional: setAll is called in Server Component context where cookies
+            // are read-only. The error is expected and safe to ignore per Supabase SSR docs.
+          }
         },
       },
     }

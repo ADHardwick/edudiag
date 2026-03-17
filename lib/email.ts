@@ -1,5 +1,5 @@
 import { Resend } from 'resend'
-import { render } from '@react-email/components'
+import { render } from '@react-email/render'
 import { LeadNotification } from '@/emails/LeadNotification'
 
 interface LeadEmailPayload {
@@ -23,7 +23,7 @@ export async function sendLeadEmails(recipients: string[], payload: LeadEmailPay
 
   const sends = recipients.map((to) =>
     resend.emails.send({
-      from: 'Directory <noreply@yourdomain.com>',
+      from: process.env.RESEND_FROM_EMAIL!,
       to,
       subject: `New Inquiry for ${payload.diagnosticianName}`,
       html,
