@@ -126,8 +126,10 @@ email               text NOT NULL
 | Route | Method | Description |
 |---|---|---|
 | `/api/leads` | POST | Submit lead → save to DB → send emails via Resend |
-| `/api/diagnosticians` | GET | Filtered/paginated results for directory |
+| `/api/diagnosticians` | GET | Filtered/paginated public results (published only) |
+| `/api/admin/diagnosticians` | GET | List all diagnosticians for admin (includes unpublished; supports `?page`, `?limit`, `?search` by name) |
 | `/api/admin/diagnosticians` | POST | Create listing (includes specialties array in body) |
+| `/api/admin/diagnosticians/[id]` | GET | Fetch single diagnostician for admin edit form (includes specialties + email recipients) |
 | `/api/admin/diagnosticians/[id]` | PATCH | Update listing (includes specialties array + email recipients array in body) |
 | `/api/admin/diagnosticians/[id]` | DELETE | Delete listing + cascade cleanup |
 | `/api/admin/upload-photo` | POST | Upload photo to Supabase Storage, return URL |
