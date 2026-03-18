@@ -2,13 +2,14 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { DiagnosticianForm } from '@/components/admin/DiagnosticianForm'
 import { notFound } from 'next/navigation'
 
-export default async function EditDiagnosticianPage({ params }: { params: { id: string } }) {
+export default async function EditDiagnosticianPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = createServiceClient()
   const [{ data: diag }, { data: specialtiesOptions }] = await Promise.all([
     supabase
       .from('diagnosticians')
       .select(`*, specialties:diagnostician_specialties(specialty:specialties_lookup(*)), email_recipients:listing_email_recipients(email)`)
-      .eq('id', params.id)
+      .eq('id', id)
       .single(),
     supabase.from('specialties_lookup').select('*').order('name'),
   ])

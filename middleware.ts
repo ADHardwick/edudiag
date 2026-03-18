@@ -22,23 +22,27 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
+  // For admin routes: verify the authenticated user is the configured admin
+  const adminEmail = process.env.ADMIN_DEFAULT_EMAIL
+  const isAdmin = !!user && !!adminEmail && user.email === adminEmail
+
   const pathname = request.nextUrl.pathname
   const isAdminApiPath = pathname.startsWith('/api/admin')
   const isAdminPagePath = pathname.startsWith('/admin')
   const isLoginPath = pathname === '/admin/login'
 
   // API routes: return 401 JSON (not a redirect — clients aren't browsers)
-  if (isAdminApiPath && !user) {
+  if (isAdminApiPath && !isAdmin) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   // Page routes: redirect to login
-  if (isAdminPagePath && !isLoginPath && !user) {
+  if (isAdminPagePath && !isLoginPath && !isAdmin) {
     return NextResponse.redirect(new URL('/admin/login', request.url))
   }
 
-  // Already logged in? Redirect away from login page
-  if (isLoginPath && user) {
+  // Already logged in and is admin? Redirect away from login page
+  if (isLoginPath && isAdmin) {
     return NextResponse.redirect(new URL('/admin', request.url))
   }
 
