@@ -47,7 +47,7 @@ export function LeadForm({ diagnosticianId, diagnosticianName }: Props) {
       <div className="text-center py-6">
         <div className="text-4xl mb-3">✅</div>
         <p className="font-semibold text-primary">Your inquiry has been sent!</p>
-        <p className="text-sm text-text-secondary mt-1">You'll be contacted soon.</p>
+        <p className="text-sm text-text-secondary mt-1">You&apos;ll be contacted soon.</p>
       </div>
     )
   }
@@ -82,18 +82,18 @@ export function LeadForm({ diagnosticianId, diagnosticianName }: Props) {
         <input id="parent_phone" type="tel" className={inputCls} value={form.parent_phone} onChange={(e) => set('parent_phone', e.target.value)} required />
       </div>
       <div>
-        <label htmlFor="child_age" className={labelCls}>Child's Age *</label>
+        <label htmlFor="child_age" className={labelCls}>Child&apos;s Age *</label>
         <select id="child_age" className={inputCls} value={form.child_age} onChange={(e) => set('child_age', e.target.value)} required>
           <option value="">Select age</option>
           {AGE_OPTIONS.map((a) => <option key={a} value={a}>{a}</option>)}
         </select>
       </div>
       <div>
-        <label htmlFor="child_school" className={labelCls}>Child's Current School</label>
+        <label htmlFor="child_school" className={labelCls}>Child&apos;s Current School</label>
         <input id="child_school" className={inputCls} value={form.child_school} onChange={(e) => set('child_school', e.target.value)} />
       </div>
       <div>
-        <label htmlFor="child_concerns" className={labelCls}>Child's Concerns *</label>
+        <label htmlFor="child_concerns" className={labelCls}>Child&apos;s Concerns *</label>
         <textarea id="child_concerns" className={inputCls} rows={3} value={form.child_concerns} onChange={(e) => set('child_concerns', e.target.value)} required />
       </div>
       <div>
