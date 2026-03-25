@@ -23,12 +23,19 @@ export async function POST(request: Request) {
 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
+  console.log('[login] supabase error:', error?.message ?? null)
+  console.log('[login] user email:', data?.user?.email ?? null)
+  console.log('[login] ADMIN_DEFAULT_EMAIL set:', !!process.env.ADMIN_DEFAULT_EMAIL)
+
   if (error || !data.user) {
     return NextResponse.json({ error: 'Invalid email or password.' }, { status: 401 })
   }
 
   const adminEmail = process.env.ADMIN_DEFAULT_EMAIL
-  if (!adminEmail || data.user.email?.toLowerCase() !== adminEmail.toLowerCase()) {
+  const emailMatch = !!adminEmail && data.user.email?.toLowerCase() === adminEmail.toLowerCase()
+  console.log('[login] email match:', emailMatch)
+
+  if (!emailMatch) {
     await supabase.auth.signOut()
     return NextResponse.json({ error: 'Invalid email or password.' }, { status: 401 })
   }
