@@ -20,18 +20,11 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-  // DEBUG — remove after diagnosis
-  const cookieNames = request.cookies.getAll().map(c => c.name)
-  console.log('[middleware] path:', request.nextUrl.pathname)
-  console.log('[middleware] cookie names:', cookieNames)
-  console.log('[middleware] user email:', user?.email ?? null)
-  console.log('[middleware] auth error:', authError?.message ?? null)
+  const { data: { session } } = await supabase.auth.getSession()
+  const user = session?.user ?? null
 
   // For admin routes: verify the authenticated user is the configured admin
   const adminEmail = process.env.ADMIN_DEFAULT_EMAIL
-  console.log('[middleware] ADMIN_DEFAULT_EMAIL set:', !!adminEmail)
   const isAdmin = !!user && !!adminEmail && user.email?.toLowerCase() === adminEmail.toLowerCase()
 
   const pathname = request.nextUrl.pathname
