@@ -24,7 +24,7 @@ export async function middleware(request: NextRequest) {
 
   // For admin routes: verify the authenticated user is the configured admin
   const adminEmail = process.env.ADMIN_DEFAULT_EMAIL
-  const isAdmin = !!user && !!adminEmail && user.email === adminEmail
+  const isAdmin = !!user && !!adminEmail && user.email?.toLowerCase() === adminEmail.toLowerCase()
 
   const pathname = request.nextUrl.pathname
   const isAdminApiPath = pathname.startsWith('/api/admin')
