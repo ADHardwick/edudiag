@@ -23,20 +23,16 @@ export async function POST(request: Request) {
 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
-  console.log('[login] supabase error:', error?.message ?? null)
-  console.log('[login] user email:', data?.user?.email ?? null)
-  console.log('[login] ADMIN_DEFAULT_EMAIL set:', !!process.env.ADMIN_DEFAULT_EMAIL)
-
   if (error || !data.user) {
-    return NextResponse.json({ error: `Supabase error: ${error?.message ?? 'no user returned'}` }, { status: 401 })
+    return NextResponse.json({ error: 'Invalid email or password.' }, { status: 401 })
   }
 
-  const adminEmail = process.env.ADMIN_DEFAULT_EMAIL
+  const adminEmail = process.env.ADMIN_DEFAULT_EMAIL?.trim()
   const emailMatch = !!adminEmail && data.user.email?.toLowerCase() === adminEmail.toLowerCase()
 
   if (!emailMatch) {
     await supabase.auth.signOut()
-    return NextResponse.json({ error: `Email mismatch. Got: ${data.user.email}, Expected: ${adminEmail ?? 'NOT SET'}` }, { status: 401 })
+    return NextResponse.json({ error: 'Invalid email or password.' }, { status: 401 })
   }
 
   return NextResponse.json({ ok: true })
