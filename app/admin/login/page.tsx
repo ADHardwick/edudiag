@@ -1,39 +1,56 @@
-'use client'
-import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { redirect } from 'next/navigation'
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
-export default function AdminLoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const supabase = createClient()
+async function login(formData: FormData) {
+  'use server'
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    setLoading(false)
-    if (error) {
-      setError('Invalid email or password.')
-    } else {
-      window.location.href = '/admin'
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
+
+  const cookieStore = cookies()
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() { return cookieStore.getAll() },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) =>
+            cookieStore.set(name, value, options)
+          )
+        },
+      },
     }
+  )
+
+  const { error } = await supabase.auth.signInWithPassword({ email, password })
+
+  if (error) {
+    redirect('/admin/login?error=1')
   }
+
+  redirect('/admin')
+}
+
+export default function AdminLoginPage({
+  searchParams,
+}: {
+  searchParams: { error?: string }
+}) {
+  const hasError = !!searchParams.error
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface">
       <div className="bg-white rounded-xl shadow-md p-8 w-full max-w-sm">
         <h1 className="text-xl font-semibold text-primary mb-6">Admin Login</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form action={login} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-text-secondary mb-1">Email</label>
             <input
               id="email"
+              name="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
@@ -42,20 +59,18 @@ export default function AdminLoginPage() {
             <label htmlFor="password" className="block text-sm font-medium text-text-secondary mb-1">Password</label>
             <input
               id="password"
+              name="password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               required
               className="w-full border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
-          {error && <p className="text-red-600 text-sm">{error}</p>}
+          {hasError && <p className="text-red-600 text-sm">Invalid email or password.</p>}
           <button
             type="submit"
-            disabled={loading}
-            className="w-full bg-primary text-white rounded-md py-2 text-sm font-medium hover:bg-primary/90 disabled:opacity-50"
+            className="w-full bg-primary text-white rounded-md py-2 text-sm font-medium hover:bg-primary/90"
           >
-            {loading ? 'Signing in…' : 'Sign in'}
+            Sign in
           </button>
         </form>
       </div>
