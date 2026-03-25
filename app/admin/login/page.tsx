@@ -1,56 +1,45 @@
-import { redirect } from 'next/navigation'
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+'use client'
+import { useState } from 'react'
 
-async function login(formData: FormData) {
-  'use server'
+export default function AdminLoginPage() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const email = formData.get('email') as string
-  const password = formData.get('password') as string
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
 
-  const cookieStore = cookies()
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() { return cookieStore.getAll() },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
-          )
-        },
-      },
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    })
+
+    if (res.ok) {
+      // Hard redirect so the browser sends the newly-set cookies to the middleware
+      window.location.href = '/admin'
+    } else {
+      const body = await res.json()
+      setError(body.error ?? 'Something went wrong.')
+      setLoading(false)
     }
-  )
-
-  const { error } = await supabase.auth.signInWithPassword({ email, password })
-
-  if (error) {
-    redirect('/admin/login?error=1')
   }
-
-  redirect('/admin')
-}
-
-export default function AdminLoginPage({
-  searchParams,
-}: {
-  searchParams: { error?: string }
-}) {
-  const hasError = !!searchParams.error
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface">
       <div className="bg-white rounded-xl shadow-md p-8 w-full max-w-sm">
         <h1 className="text-xl font-semibold text-primary mb-6">Admin Login</h1>
-        <form action={login} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-text-secondary mb-1">Email</label>
             <input
               id="email"
-              name="email"
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
@@ -59,18 +48,20 @@ export default function AdminLoginPage({
             <label htmlFor="password" className="block text-sm font-medium text-text-secondary mb-1">Password</label>
             <input
               id="password"
-              name="password"
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
               className="w-full border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
-          {hasError && <p className="text-red-600 text-sm">Invalid email or password.</p>}
+          {error && <p className="text-red-600 text-sm">{error}</p>}
           <button
             type="submit"
-            className="w-full bg-primary text-white rounded-md py-2 text-sm font-medium hover:bg-primary/90"
+            disabled={loading}
+            className="w-full bg-primary text-white rounded-md py-2 text-sm font-medium hover:bg-primary/90 disabled:opacity-50"
           >
-            Sign in
+            {loading ? 'Signing in…' : 'Sign in'}
           </button>
         </form>
       </div>
