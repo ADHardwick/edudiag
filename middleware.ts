@@ -23,10 +23,6 @@ export async function middleware(request: NextRequest) {
   const { data: { session } } = await supabase.auth.getSession()
   const user = session?.user ?? null
 
-  // DEBUG
-  const cookieNames = request.cookies.getAll().map(c => c.name)
-  console.warn('[MW]', request.nextUrl.pathname, '| user:', user?.email ?? 'null', '| cookies:', cookieNames.join(','))
-
   // For admin routes: verify the authenticated user is the configured admin
   const adminEmail = process.env.ADMIN_DEFAULT_EMAIL?.trim()
   const isAdmin = !!user && !!adminEmail && user.email?.toLowerCase() === adminEmail.toLowerCase()
