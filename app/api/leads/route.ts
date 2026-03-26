@@ -104,6 +104,7 @@ export async function POST(request: NextRequest) {
   ].filter((e): e is string => Boolean(e))
 
   // Send emails (best effort — don't fail the request if email fails)
+  let emailError: string | null = null
   try {
     await sendLeadEmails(allRecipients, {
       diagnosticianName: diag.name,
@@ -117,8 +118,9 @@ export async function POST(request: NextRequest) {
       leadId: lead.id,
     })
   } catch (err) {
+    emailError = err instanceof Error ? err.message : String(err)
     console.error('Lead email send failed (non-blocking):', err)
   }
 
-  return NextResponse.json({ ok: true })
+  return NextResponse.json({ ok: true, _emailError: emailError })
 }
