@@ -10,7 +10,13 @@ interface Props {
   searchParamsString?: string
 }
 
-export function DirectoryGrid({ diagnosticians, total, page, limit, searchParamsString = '' }: Props) {
+export function DirectoryGrid({
+  diagnosticians,
+  total,
+  page,
+  limit,
+  searchParamsString = '',
+}: Props) {
   const totalPages = Math.ceil(total / limit)
 
   function buildPageUrl(p: number): string {
@@ -21,7 +27,7 @@ export function DirectoryGrid({ diagnosticians, total, page, limit, searchParams
 
   if (!diagnosticians.length) {
     return (
-      <div className="text-center py-16 text-text-secondary">
+      <div className="text-center py-16 text-slate-400">
         <p className="text-lg">No diagnosticians found.</p>
         <p className="text-sm mt-2">Try adjusting your filters.</p>
       </div>
@@ -30,7 +36,9 @@ export function DirectoryGrid({ diagnosticians, total, page, limit, searchParams
 
   return (
     <div>
-      <p className="text-sm text-text-secondary mb-4">{total} result{total !== 1 ? 's' : ''}</p>
+      <p className="text-sm text-slate-400 text-right mb-4">
+        {total} result{total !== 1 ? 's' : ''}
+      </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {diagnosticians.map((d) => (
           <DiagnosticianCard key={d.id} diagnostician={d} />
@@ -42,7 +50,11 @@ export function DirectoryGrid({ diagnosticians, total, page, limit, searchParams
             <Link
               key={p}
               href={buildPageUrl(p)}
-              className={`px-3 py-1 rounded text-sm ${p === page ? 'bg-primary text-white' : 'bg-surface text-text-secondary hover:bg-border'}`}
+              className={`px-3 py-1.5 rounded text-sm font-semibold ${
+                p === page
+                  ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                  : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'
+              }`}
             >
               {p}
             </Link>

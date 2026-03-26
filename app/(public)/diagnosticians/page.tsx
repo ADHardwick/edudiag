@@ -32,9 +32,9 @@ export default async function DiagnosticiansPage({ searchParams }: { searchParam
   }
 
   return (
-    <div className="min-h-screen bg-surface">
-      <div className="max-w-6xl mx-auto px-4 py-8 space-y-2">
-        <h1 className="text-2xl font-bold text-primary">All Diagnosticians</h1>
+    <div className="min-h-screen bg-slate-50">
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <h1 className="text-2xl font-bold text-slate-800 mb-6">All Diagnosticians</h1>
         <DirectoryPageClient
           diagnosticians={diagnosticians}
           total={total}
