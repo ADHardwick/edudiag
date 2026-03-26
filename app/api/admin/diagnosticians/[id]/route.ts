@@ -13,7 +13,7 @@ export async function GET(_: NextRequest, { params }: Params) {
     .from('diagnosticians')
     .select(`
       *,
-      specialties:diagnostician_specialties(specialty:specialties_lookup(*)),
+      specialties:diagnostician_specialties!left(specialty:specialties_lookup!left(*)),
       email_recipients:listing_email_recipients(email)
     `)
     .eq('id', id)

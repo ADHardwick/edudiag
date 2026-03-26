@@ -88,11 +88,11 @@ export function DiagnosticianForm({ diagnostician, specialtiesOptions }: Props) 
       return
     }
 
-    if (json.geocodeWarning) setGeocodeWarning(true)
-    else router.push('/admin/diagnosticians')
-
     if (json.geocodeWarning) {
-      setTimeout(() => router.push('/admin/diagnosticians'), 2500)
+      setGeocodeWarning(true)
+      setTimeout(() => { window.location.href = '/admin/diagnosticians' }, 2500)
+    } else {
+      window.location.href = '/admin/diagnosticians'
     }
   }
 

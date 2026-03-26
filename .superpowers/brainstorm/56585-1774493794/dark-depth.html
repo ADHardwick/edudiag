@@ -1,0 +1,83 @@
+<h2>How dark should the site go?</h2>
+<p class="subtitle">You chose Modern & Bold. Now let's decide how much dark to use across the whole page.</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="hero-only" onclick="toggleSelect(this)">
+    <div class="card-image" style="font-family: system-ui, sans-serif; overflow: hidden; border-radius: 6px;">
+      <!-- Dark hero -->
+      <div style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); padding: 14px 16px 18px;">
+        <div style="font-size: 11px; font-weight: 800; color: #a5b4fc; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px;">✦ SharpKid</div>
+        <div style="font-size: 16px; font-weight: 800; color: white; line-height: 1.2;">Find Your Child's<br><span style="color: #818cf8;">Perfect Specialist</span></div>
+      </div>
+      <!-- Light cards below -->
+      <div style="background: #f8fafc; padding: 12px; display: flex; gap: 6px;">
+        <div style="background: white; border-radius: 6px; padding: 10px; flex: 1; box-shadow: 0 1px 6px rgba(0,0,0,0.08);">
+          <div style="font-size: 9px; font-weight: 700; color: #1e293b;">Dr. Jane Smith</div>
+          <div style="font-size: 8px; color: #64748b; margin-top: 2px;">Austin, TX</div>
+          <div style="background: #eef2ff; color: #6366f1; border-radius: 999px; font-size: 7px; font-weight: 600; padding: 2px 6px; display: inline-block; margin-top: 4px;">ADHD</div>
+        </div>
+        <div style="background: white; border-radius: 6px; padding: 10px; flex: 1; box-shadow: 0 1px 6px rgba(0,0,0,0.08);">
+          <div style="font-size: 9px; font-weight: 700; color: #1e293b;">Dr. Mark Lee</div>
+          <div style="font-size: 8px; color: #64748b; margin-top: 2px;">Houston, TX</div>
+          <div style="background: #eef2ff; color: #6366f1; border-radius: 999px; font-size: 7px; font-weight: 600; padding: 2px 6px; display: inline-block; margin-top: 4px;">Dyslexia</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Dark hero, light body</h3>
+      <p>Striking dark/gradient header, then clean white cards below. Best readability for a dense directory. Most practical.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="full-dark" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); padding: 14px 16px 18px; font-family: system-ui, sans-serif; border-radius: 6px;">
+      <div style="font-size: 11px; font-weight: 800; color: #a5b4fc; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px;">✦ SharpKid</div>
+      <div style="font-size: 16px; font-weight: 800; color: white; line-height: 1.2; margin-bottom: 12px;">Find Your Child's<br><span style="color: #818cf8;">Perfect Specialist</span></div>
+      <div style="display: flex; gap: 6px;">
+        <div style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; padding: 10px; flex: 1; backdrop-filter: blur(4px);">
+          <div style="font-size: 9px; font-weight: 700; color: #e2e8f0;">Dr. Jane Smith</div>
+          <div style="font-size: 8px; color: #94a3b8; margin-top: 2px;">Austin, TX</div>
+          <div style="background: rgba(99,102,241,0.25); color: #a5b4fc; border-radius: 999px; font-size: 7px; font-weight: 600; padding: 2px 6px; display: inline-block; margin-top: 4px;">ADHD</div>
+        </div>
+        <div style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; padding: 10px; flex: 1; backdrop-filter: blur(4px);">
+          <div style="font-size: 9px; font-weight: 700; color: #e2e8f0;">Dr. Mark Lee</div>
+          <div style="font-size: 8px; color: #94a3b8; margin-top: 2px;">Houston, TX</div>
+          <div style="background: rgba(99,102,241,0.25); color: #a5b4fc; border-radius: 999px; font-size: 7px; font-weight: 600; padding: 2px 6px; display: inline-block; margin-top: 4px;">Dyslexia</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Full dark + glass cards</h3>
+      <p>Dark background end-to-end with glassmorphism cards throughout. Maximum drama and consistency — bold statement.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="dark-mid" onclick="toggleSelect(this)">
+    <div class="card-image" style="font-family: system-ui, sans-serif; overflow: hidden; border-radius: 6px;">
+      <!-- Dark hero -->
+      <div style="background: linear-gradient(135deg, #0f172a 0%, #312e81 100%); padding: 14px 16px 18px;">
+        <div style="font-size: 11px; font-weight: 800; color: #a5b4fc; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px;">✦ SharpKid</div>
+        <div style="font-size: 16px; font-weight: 800; color: white; line-height: 1.2;">Find Your Child's<br><span style="color: #c4b5fd;">Perfect Specialist</span></div>
+      </div>
+      <!-- Dark-ish slate cards below -->
+      <div style="background: #0f172a; padding: 12px; display: flex; gap: 6px;">
+        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: 10px; flex: 1;">
+          <div style="font-size: 9px; font-weight: 700; color: #f1f5f9;">Dr. Jane Smith</div>
+          <div style="font-size: 8px; color: #94a3b8; margin-top: 2px;">Austin, TX</div>
+          <div style="background: rgba(139,92,246,0.2); color: #c4b5fd; border-radius: 999px; font-size: 7px; font-weight: 600; padding: 2px 6px; display: inline-block; margin-top: 4px;">ADHD</div>
+        </div>
+        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: 10px; flex: 1;">
+          <div style="font-size: 9px; font-weight: 700; color: #f1f5f9;">Dr. Mark Lee</div>
+          <div style="font-size: 8px; color: #94a3b8; margin-top: 2px;">Houston, TX</div>
+          <div style="background: rgba(139,92,246,0.2); color: #c4b5fd; border-radius: 999px; font-size: 7px; font-weight: 600; padding: 2px 6px; display: inline-block; margin-top: 4px;">Dyslexia</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Dark hero + dark slate body</h3>
+      <p>Deep navy/slate throughout but with visible card surfaces. Cohesive dark experience without full glass effect — easier to read.</p>
+    </div>
+  </div>
+
+</div>

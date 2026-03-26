@@ -2,6 +2,8 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { StatCard } from '@/components/admin/StatCard'
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic'
+
 export default async function AdminDashboardPage() {
   const supabase = createServiceClient()
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()

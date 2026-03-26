@@ -1,12 +1,18 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
+// Disable Next.js fetch caching for all Supabase requests so server components
+// always see live data rather than stale cached responses.
+const noStoreFetch: typeof fetch = (url, options = {}) =>
+  fetch(url, { ...options, cache: 'no-store' })
+
 export function createClient() {
   const cookieStore = cookies()
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
+      global: { fetch: noStoreFetch },
       cookies: {
         getAll() { return cookieStore.getAll() },
         setAll(cookiesToSet) {
@@ -28,6 +34,9 @@ export function createServiceClient() {
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!.trim(),
     process.env.SUPABASE_SERVICE_ROLE_KEY!.trim(),
-    { cookies: { getAll: () => [], setAll: () => {} } }
+    {
+      global: { fetch: noStoreFetch },
+      cookies: { getAll: () => [], setAll: () => {} },
+    }
   )
 }

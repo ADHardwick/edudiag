@@ -6,7 +6,16 @@
       "Bash(npm ls:*)",
       "Bash(npx tsc:*)",
       "Bash(git:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(node:*)",
+      "Bash(npm info:*)",
+      "Bash(npm test:*)",
+      "Bash(python3:*)",
+      "Bash(grep:*)",
+      "Bash(npm run:*)",
+      "Bash(vercel:*)",
+      "Bash(printf:*)",
+      "Bash(curl:*)"
     ]
   }
 }

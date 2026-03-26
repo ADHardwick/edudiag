@@ -1,0 +1,88 @@
+<h2>How should the directory cards look?</h2>
+<p class="subtitle">These are the cards showing each diagnostician in the search results grid.</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="portrait" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: #f8fafc; padding: 16px; font-family: system-ui, sans-serif;">
+      <div style="background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); max-width: 160px; margin: 0 auto;">
+        <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; font-weight: 700; margin: 0 auto 10px;">J</div>
+        <div style="text-align: center; margin-bottom: 8px;">
+          <div style="font-size: 11px; font-weight: 700; color: #0f172a;">Dr. Jane Smith</div>
+          <div style="font-size: 9px; color: #64748b; margin-top: 2px;">📍 Austin, TX</div>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; margin-bottom: 10px;">
+          <span style="background: #eef2ff; color: #6366f1; border-radius: 999px; font-size: 7px; font-weight: 600; padding: 2px 6px;">ADHD</span>
+          <span style="background: #eef2ff; color: #6366f1; border-radius: 999px; font-size: 7px; font-weight: 600; padding: 2px 6px;">Dyslexia</span>
+        </div>
+        <div style="font-size: 8px; color: #64748b; text-align: center; margin-bottom: 10px; line-height: 1.4;">Specializes in learning assessments for children ages 4–18…</div>
+        <div style="background: linear-gradient(90deg, #6366f1, #8b5cf6); color: white; border-radius: 6px; padding: 6px; text-align: center; font-size: 8px; font-weight: 700;">View Profile →</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Portrait cards (centered)</h3>
+      <p>Avatar centered top, name + location below, specialties, bio excerpt, CTA button. Clean and gallery-like.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="horizontal" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: #f8fafc; padding: 16px; font-family: system-ui, sans-serif;">
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="background: white; border-radius: 10px; padding: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); display: flex; gap: 10px; align-items: flex-start;">
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 700; flex-shrink: 0;">J</div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-size: 10px; font-weight: 700; color: #0f172a;">Dr. Jane Smith</div>
+            <div style="font-size: 8px; color: #64748b;">Austin, TX</div>
+            <div style="display: flex; gap: 3px; margin-top: 4px; flex-wrap: wrap;">
+              <span style="background: #eef2ff; color: #6366f1; border-radius: 999px; font-size: 7px; font-weight: 600; padding: 1px 5px;">ADHD</span>
+              <span style="background: #eef2ff; color: #6366f1; border-radius: 999px; font-size: 7px; font-weight: 600; padding: 1px 5px;">Dyslexia</span>
+            </div>
+          </div>
+          <div style="background: #eef2ff; color: #6366f1; border-radius: 6px; padding: 4px 8px; font-size: 7px; font-weight: 700; flex-shrink: 0;">View →</div>
+        </div>
+        <div style="background: white; border-radius: 10px; padding: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); display: flex; gap: 10px; align-items: flex-start;">
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #8b5cf6, #ec4899); display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 700; flex-shrink: 0;">M</div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-size: 10px; font-weight: 700; color: #0f172a;">Dr. Mark Lee</div>
+            <div style="font-size: 8px; color: #64748b;">Houston, TX</div>
+            <div style="display: flex; gap: 3px; margin-top: 4px; flex-wrap: wrap;">
+              <span style="background: #eef2ff; color: #6366f1; border-radius: 999px; font-size: 7px; font-weight: 600; padding: 1px 5px;">Autism</span>
+            </div>
+          </div>
+          <div style="background: #eef2ff; color: #6366f1; border-radius: 6px; padding: 4px 8px; font-size: 7px; font-weight: 700; flex-shrink: 0;">View →</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Horizontal list cards</h3>
+      <p>Avatar left, info right, compact rows. Fits more results per screen. Good for scan-ability when there are many listings.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="feature" onclick="toggleSelect(this)">
+    <div class="card-image" style="background: #f8fafc; padding: 16px; font-family: system-ui, sans-serif;">
+      <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+        <div style="background: linear-gradient(135deg, #0f172a, #312e81); padding: 14px; display: flex; align-items: center; gap: 10px;">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 700; flex-shrink: 0;">J</div>
+          <div>
+            <div style="font-size: 10px; font-weight: 700; color: white;">Dr. Jane Smith</div>
+            <div style="font-size: 8px; color: #a5b4fc;">Austin, TX</div>
+          </div>
+        </div>
+        <div style="padding: 10px 14px;">
+          <div style="display: flex; gap: 3px; flex-wrap: wrap; margin-bottom: 6px;">
+            <span style="background: #eef2ff; color: #6366f1; border-radius: 999px; font-size: 7px; font-weight: 600; padding: 2px 6px;">ADHD</span>
+            <span style="background: #eef2ff; color: #6366f1; border-radius: 999px; font-size: 7px; font-weight: 600; padding: 2px 6px;">Dyslexia</span>
+          </div>
+          <div style="font-size: 8px; color: #64748b; line-height: 1.4; margin-bottom: 8px;">Specializes in learning assessments for children ages 4–18…</div>
+          <div style="background: linear-gradient(90deg, #6366f1, #8b5cf6); color: white; border-radius: 6px; padding: 5px 10px; font-size: 8px; font-weight: 700; display: inline-block;">View Profile →</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Dark-header feature cards</h3>
+      <p>Dark gradient banner at top of each card with name/avatar, light body below. Echoes the site hero — very cohesive.</p>
+    </div>
+  </div>
+
+</div>

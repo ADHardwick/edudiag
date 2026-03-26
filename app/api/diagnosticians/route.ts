@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
   let query = supabase
     .from('diagnosticians')
-    .select(`*, specialties:diagnostician_specialties(specialty:specialties_lookup(*))`, { count: 'exact' })
+    .select(`*, specialties:diagnostician_specialties!left(specialty:specialties_lookup!left(*))`, { count: 'exact' })
     .eq('is_published', true)
     .order('name')
     .range(from, to)
