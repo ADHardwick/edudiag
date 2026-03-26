@@ -21,14 +21,22 @@ export async function sendLeadEmails(recipients: string[], payload: LeadEmailPay
   // `render()` is async in @react-email/render v2+; must be awaited
   const html = await render(LeadNotification({ ...payload, adminLeadUrl }))
 
-  const sends = recipients.map((to) =>
-    resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL!,
-      to,
-      subject: `New Inquiry for ${payload.diagnosticianName}`,
-      html,
-    })
+  const results = await Promise.allSettled(
+    recipients.map((to) =>
+      resend.emails.send({
+        from: process.env.RESEND_FROM_EMAIL!,
+        to,
+        subject: `New Inquiry for ${payload.diagnosticianName}`,
+        html,
+      })
+    )
   )
 
-  await Promise.allSettled(sends)
+  const errors = results
+    .map((r) => (r.status === 'fulfilled' ? r.value.error : r.reason))
+    .filter(Boolean)
+
+  if (errors.length) {
+    throw new Error(`Resend errors: ${errors.map((e: any) => e?.message ?? JSON.stringify(e)).join('; ')}`)
+  }
 }
